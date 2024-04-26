@@ -1,0 +1,32 @@
+spring:
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      uri: http://localhost:8083
+resilience4j:
+  retry:
+    instances:
+      retryApi:
+        max-attempts: 5
+        wait-duration: 5s
+
+  rate-limiter:
+    instances:
+      rateLimiterApi:
+        registerHealthIndicator: false
+        limitForPeriod: 2
+        limitRefreshPeriod: 10s
+        timeoutDuration: 2s
+
+  circuit-breaker:
+    instances:
+      circuitBreakerApi:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 2
+        failureRateThreshold: 50
+        waitDurationInOpenState: 20s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
